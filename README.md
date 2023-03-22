@@ -39,7 +39,7 @@ python manage.py runserver
 ``` 
 Une fois le serveur de développement lancé, vous pouvez voir, dans un navigateur web, la page ayant l'adresse 
 `http://127.0.0.1:8000` s'affiche
-- `Vous pouvez utiliser le nom du super utilisateur Rochdi et le mot de pase secret@django` 
+- `Vous pouvez utiliser le nom du super utilisateur rochdi.guezguez@gmail.com et le mot de pase secret@django` 
 pour se connecter à notre application.
 ### ⚙️ Créer un autre super utilisateur pour se connecter à partir de l'interface de l'administration Django
 ```bash
@@ -49,7 +49,7 @@ Dans l'étape suivante, il suffit de rester dans le terminal pour taper un nom d
 avec confirmation du mot de passe.
 ### ⚙️ Se connecter avec l'interface de l'administration Django via `http://127.0.0.1:8000/admin`
 - Une fois le serveur de développement lancé, vous pouvez voir, dans un navigateur web, la page de l'administration 
-Django via `http://127.0.0.1:8000/admin`. Pour se connecter, il suffit de taper le nom d'utilisateur `Rochdi` et 
+Django via `http://127.0.0.1:8000/admin`. Pour se connecter, il suffit de taper le nom d'utilisateur `rochdi.guezguez@gmail.com` et 
 le mot de passe `secret@django`, et de cliquer sur le bouton `Connexion`.
 - `Une fois connecté, vous pouvez accéder à notre base de données et savoir les noms de tous les utilisateurs inscrits`
 - Vous pouvez utiliser un nom d'utilisateur inscrit et le mot de passe `secret@django` 
