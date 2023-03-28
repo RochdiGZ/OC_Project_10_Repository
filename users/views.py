@@ -1,20 +1,22 @@
 # users/views.py
 from django.http import HttpResponse
 from rest_framework import status
+from rest_framework.generics import CreateAPIView
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-from rest_framework.views import APIView
+
+
 from users.models import CustomUser
 from users.serializers import UserSerializer
 
 
-class CreateUserAPIView(APIView):
+class CreateUser(CreateAPIView):
     # Allow any user (authenticated or not) to access this url
     permission_classes = (AllowAny,)
-    queryset = CustomUser.objects.all()
+    queryset = CustomUser.objects.all().order_by('-date_joined')
     serializer_class = UserSerializer
 
-    def post(self, request):
+    def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid(raise_exception=True):
             user = serializer.save()
@@ -27,22 +29,14 @@ class CreateUserAPIView(APIView):
 
 
 def home(request):
-    if request.user.is_authenticated:
-        response = ("<h1>Bienvenue ! Vous êtes connecté avec {email}</h1> \n"
-                    "        <ul>\n"
-                    "            <h2><li>Veuillez créer un utilisateur en cliquant sur le lien suivant :\n"
-                    "                <a href=http://127.0.0.1:8000/api-auth/users/create/>http://127.0.0.1:8000/"
-                    "api-auth/users/create/</a>\n"
-                    "            </li></h2>\n"
-                    "            <h2><li>Veuillez se déconnecter en cliquant sur le lien suivant :\n"
-                    "                <a href=http://127.0.0.1:8000/api-auth/logout/>http://127.0.0.1:8000/"
-                    "api-auth/logout/</a>\n"
-                    "            </li></h2>\n"
-                    "        </ul>")
-        return HttpResponse(response.format(email=request.user.email))
-
-    response = ("<h1>Veuillez se connecter via Django REST framework en cliquant sur le lien suivant :</h1>\n"
-                "    <h2><li>\n"
-                "        <a href=http://127.0.0.1:8000/api-auth/login/>http://127.0.0.1:8000/api-auth/login/</a>\n"
-                "    </li></h2>")
+    response = ("<h1>Please signup or login or logout via our API :</h1>\n"
+                " <h2><li>\n"
+                " <a href=http://127.0.0.1:8000/signup/>http://127.0.0.1:8000/signup/</a>\n"
+                " </li></h2>"
+                " <h2><li>\n"
+                " <a href=http://127.0.0.1:8000/login/>http://127.0.0.1:8000/login/</a>\n"
+                " </li></h2>"
+                " <h2><li>\n"
+                " <a href=http://127.0.0.1:8000/logout/>http://127.0.0.1:8000/logout/</a>\n"
+                " </li></h2>")
     return HttpResponse(response)

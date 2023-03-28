@@ -16,10 +16,19 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from users.views import home
+from rest_framework import routers
+from projects.views import ProjectViewSet, ContributorViewSet, CommentViewSet, IssueViewSet
+
+router = routers.DefaultRouter()
+router.register(r"", ProjectViewSet, basename="projects")
+router.register(r"^(?P<project_id>[^/.]+)/users", ContributorViewSet, basename="users")
+router.register(r"^(?P<project_id>[^/.]+)/issues", IssueViewSet, basename="issues")
+router.register(r"^(?P<project_id>[^/.]+)/issues/(?P<issue_id>[^/.]+)/comments", CommentViewSet, basename="comments")
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
     path('', home, name='home'),
-    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    path('api-auth/users/', include('users.urls')),
+    path('projects/', include(router.urls)),
+    path('', include('users.urls')),
+    path('', include('rest_framework.urls', namespace='rest_framework')),
+    path('admin/', admin.site.urls),
 ]

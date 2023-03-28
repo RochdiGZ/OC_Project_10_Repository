@@ -1,0 +1,27 @@
+### API Testing with Postman
+http://127.0.0.1:8000/signup/
+## Testing 01 with the following raw body (json)
+{
+    "email": "pierre.valentin@gmail.com",
+    "password": "secret@django",
+    "first_name": "Pierre",
+    "last_name": "Valentin"
+}
+## Testing 02 with the following raw body (json)
+{
+    "email": "rochdi.guezguez@gmail.com",
+    "password": "secret@django",
+    "first_name": "Rochdi",
+    "last_name": "GUEZGUEZ"
+}
+http://127.0.0.1:8000/login/
+## Testing 01 with the following raw body (json)
+{
+    "email": "pierre.valentin@gmail.com",
+    "password": "secret@django"
+}
+## Testing 02 with the following raw body (json)
+{
+    "email": "rochdi.guezguez@gmail.com",
+    "password": "secret@django"
+}
