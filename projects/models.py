@@ -16,12 +16,12 @@ STATUS = (("ToDo", "ToDo"), ("InProgress", "InProgress"), ("Done", "Done"))
 class Project(models.Model):
     title = models.CharField(max_length=50, blank=False, unique=True)
     description = models.CharField(max_length=500)
-    type = models.CharField(max_length=10, choices=TYPE, editable=False)
-    author_user_id = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE,)
+    type = models.CharField(max_length=10, choices=TYPE, default="Back-End")
+    author = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.RESTRICT,
+                               related_name='project_author')
     created_at = models.DateTimeField(default=timezone.now, editable=False)
 
     class Meta:
-        constraints = [models.UniqueConstraint(fields=['author_user_id', 'title'], name='unique_contributor')]
         verbose_name = 'Project'
 
     def __str__(self):
@@ -29,17 +29,21 @@ class Project(models.Model):
 
 
 class Contributor(models.Model):
-    user_id = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    project_id = models.ForeignKey(to=Project, on_delete=models.CASCADE)
-    permission = models.CharField(max_length=12, choices=PERMISSION, default='Restricted', editable=False)
-    role = models.CharField(max_length=12, choices=ROLE, default='Contributor', editable=False)
+    user = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
+                             related_name='user_contributor')
+    project = models.ForeignKey(to=Project, on_delete=models.RESTRICT,
+                                related_name='project_contributors')
+    permission = models.CharField(max_length=12, choices=PERMISSION, default='Restricted')
+    role = models.CharField(max_length=12, choices=ROLE, default='Contributor')
 
     class Meta:
         verbose_name = 'Contributor'
-        unique_together = ['user_id', 'project_id']
+        unique_together = ['user', 'project']
 
     def __str__(self):
-        return f"{self.user_id} - {self.role} - {self.project_id}"
+        if self.role == "Author":
+            return f"{self.role} : {self.user}"
+        return f"{self.user}"
 
 
 class Issue(models.Model):
@@ -47,17 +51,18 @@ class Issue(models.Model):
     description = models.CharField(max_length=2500)
     tag = models.CharField(max_length=12, choices=TAG)
     priority = models.CharField(max_length=12, choices=PRIORITY)
-    project_id = models.ForeignKey(Project, on_delete=models.CASCADE)
-    status = models.CharField(max_length=12, choices=STATUS)
-    author_user_id = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
-                                       related_name='author')
-    assignee_user_id = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
-                                         related_name='assignee')
+    project = models.ForeignKey(Project, on_delete=models.CASCADE,
+                                related_name='issue_related')
+    status = models.CharField(max_length=12, choices=STATUS, default='ToDo')
+    author = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.RESTRICT,
+                               related_name='issue_author')
+    assignee = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.RESTRICT,
+                                 related_name='issue_assigned_to')
+    # created_time = models.DateTimeField(default=timezone.now, editable=False)
     created_time = models.DateTimeField(auto_now_add=True, editable=False)
     last_updated = models.DateTimeField(auto_now=True, editable=False)
 
     class Meta:
-        ordering = ['created_time']
         verbose_name = 'Issue'
 
     def __str__(self):
@@ -66,13 +71,15 @@ class Issue(models.Model):
 
 class Comment(models.Model):
     description = models.CharField(max_length=500, blank=False, unique=True)
-    author_user_id = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    issue_id = models.ForeignKey(to=Issue, on_delete=models.CASCADE)
+    author = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
+                               related_name='comment_author')
+    issue = models.ForeignKey(to=Issue, on_delete=models.CASCADE,
+                              related_name='issue_comment')
+    # created_time = models.DateTimeField(default=timezone.now, editable=False)
     created_time = models.DateTimeField(auto_now_add=True, editable=False)
-    last_updated = models.DateTimeField(auto_now=True)
+    last_updated = models.DateTimeField(auto_now=True, editable=False)
 
     class Meta:
-        ordering = ['created_time']
         verbose_name = 'Comment'
 
     def __str__(self):

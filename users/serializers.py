@@ -12,7 +12,6 @@ class UserSerializer(serializers.ModelSerializer):
         model = CustomUser
         fields = ['email', 'password', 'first_name', 'last_name', 'date_joined']
         extra_kwargs = {
-            'id': {'read_only': True},
             'password': {'write_only': True},
             'first_name': {'required': True},
             'last_name': {'required': True},

@@ -7,5 +7,5 @@ from .views import CreateUser
 urlpatterns = [
     path('signup/', CreateUser.as_view(), name='signup'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token-refresh'),
-    path('login/', TokenObtainPairView.as_view(), name='token-obtain-pair'),
+    path('login', TokenObtainPairView.as_view(), name='token-obtain-pair'),
 ]

@@ -13,8 +13,8 @@ class IsAuthor(BasePermission):
 
     def has_permission(self, request, view):
         current_project = view.kwargs.get('project_id')
-        if Contributor.objects.filter(project_id=current_project).exists():
-            return Contributor.objects.filter(project_id=current_project, user_id=request.user,
+        if Contributor.objects.filter(project=current_project).exists():
+            return Contributor.objects.filter(project=current_project, user=request.user,
                                               role="Author", permission="All").exists()
         raise Http404()
 
@@ -30,10 +30,10 @@ class IsManager(BasePermission):
     def has_object_permission(self, request, view, obj):
         if view.action in ['list', 'retrieve']:
             current_project = view.get_project()
-            contributors = Contributor.objects.filter(project_id=current_project)
-            return contributors.filter(user_id=request.user).exists()
+            contributors = Contributor.objects.filter(project=current_project)
+            return contributors.filter(user=request.user).exists()
         if view.action in ['update', 'destroy']:
-            return request.user == obj.author_user_id
+            return request.user == obj.author
 
 
 class IsContributor(BasePermission):
@@ -46,14 +46,14 @@ class IsContributor(BasePermission):
     def has_permission(self, request, view):
         if view.get_project():
             current_project = view.kwargs.get('project_id')
-            contributors = Contributor.objects.filter(project_id=current_project)
-            return contributors.filter(user_id=request.user).exists()
+            contributors = Contributor.objects.filter(project=current_project)
+            return contributors.filter(user=request.user).exists()
         raise Http404()
 
     def has_object_permission(self, request, view, obj):
         if view.action in ['list', 'create', 'retrieve']:
             current_project = view.get_project()
-            contributors = Contributor.objects.filter(project_id=current_project)
-            return contributors.filter(user_id=request.user).exists()
+            contributors = Contributor.objects.filter(project=current_project)
+            return contributors.filter(user=request.user).exists()
         if view.action in ['update', 'destroy']:
-            return request.user == obj.author_user_id
+            return request.user == obj.author
