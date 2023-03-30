@@ -2,3 +2,5 @@
 __pycache__/
 ENV/
 db.sqlite3
+P10_DOCS/
+Creez_une_API_securisee_RESTful_en_utilisant_Django_REST_GUEZGUEZ_Rochdi/
