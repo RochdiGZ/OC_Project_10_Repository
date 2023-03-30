@@ -8,7 +8,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from .models import Project, Contributor, Issue, Comment
 from .serializers import ProjectSerializer, ContributorSerializer, IssueSerializer, CommentSerializer
-# from .permissions import IsAuthor, IsManager, IsContributor
+# from .permissions import IsProjectAuthor, IsIssueAuthor, IsCommentAuthor
 
 
 class ProjectViewSet(viewsets.ModelViewSet):

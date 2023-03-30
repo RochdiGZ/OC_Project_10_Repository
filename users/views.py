@@ -29,14 +29,22 @@ class CreateUser(CreateAPIView):
 
 
 def home(request):
-    response = ("<h1>Please signup or login or logout via our API :</h1>\n"
-                " <h2><li>\n"
-                " <a href=http://127.0.0.1:8000/signup/>http://127.0.0.1:8000/signup/</a>\n"
-                " </li></h2>"
-                " <h2><li>\n"
-                " <a href=http://127.0.0.1:8000/login/>http://127.0.0.1:8000/login/</a>\n"
-                " </li></h2>"
-                " <h2><li>\n"
-                " <a href=http://127.0.0.1:8000/logout/>http://127.0.0.1:8000/logout/</a>\n"
-                " </li></h2>")
+    if request.user.is_authenticated:
+        response = ("<h1>Please create or list projects and you can logout via our secure API :</h1>\n"
+                    "<h2><li>\n"
+                    "   <a href=http://127.0.0.1:8000/projects/>http://127.0.0.1:8000/projects/</a>\n"
+                    "</li></h2>"
+                    "<h2><li>\n"
+                    "   <a href=http://127.0.0.1:8000/logout/>http://127.0.0.1:8000/logout/</a>\n"
+                    "</li></h2>"
+                    )
+        return HttpResponse(response)
+    response = ("<h1>Please signup or login via our secure API :</h1>\n"
+                "<h2><li>\n"
+                "   <a href=http://127.0.0.1:8000/signup/>http://127.0.0.1:8000/signup/</a>\n"
+                "</li></h2>"
+                "<h2><li>\n"
+                "   <a href=http://127.0.0.1:8000/login/>http://127.0.0.1:8000/login/</a>\n"
+                "</li></h2>"
+                )
     return HttpResponse(response)
