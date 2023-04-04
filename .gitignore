@@ -1,8 +1,4 @@
 .idea/
 __pycache__/
 ENV/
-db.sqlite3
 P10_DOCS/
-projects/migrations/0001_initial.py
-projects/migrations/0002_initial.py
-users/migrations/0001_initial.py
