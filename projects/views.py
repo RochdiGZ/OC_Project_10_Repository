@@ -4,8 +4,10 @@ from django.http import Http404
 from rest_framework import viewsets, status
 from rest_framework.exceptions import ValidationError
 from rest_framework.generics import get_object_or_404
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
+from rest_framework_simplejwt.authentication import JWTAuthentication
+
 from .models import Project, Contributor, Issue, Comment
 from .serializers import ProjectSerializer, ContributorSerializer, IssueSerializer, CommentSerializer
 # from .permissions import IsProjectAuthor, IsIssueAuthor, IsCommentAuthor
@@ -17,7 +19,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
     """
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     def get_project(self):
         current_project = self.kwargs["project_pk"]
@@ -49,7 +51,7 @@ class ContributorViewSet(viewsets.ModelViewSet):
     """
     serializer_class = ContributorSerializer
     queryset = Contributor.objects.all()
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     def get_queryset(self):
         """ retrieve all contributors of a project """
