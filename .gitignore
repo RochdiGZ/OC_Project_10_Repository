@@ -2,3 +2,7 @@
 __pycache__/
 ENV/
 P10_DOCS/
+projects/migrations/0001_initial.py/
+projects/migrations/0002_initial.py/
+users/migrations/0001_initial.py/
+db.sqlite3/
