@@ -6,11 +6,10 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
-from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from .models import Project, Contributor, Issue, Comment
 from .serializers import ProjectSerializer, ContributorSerializer, IssueSerializer, CommentSerializer
-# from .permissions import IsProjectAuthor, IsIssueAuthor, IsCommentAuthor
+from .permissions import ProjectPermission, ContributorPermission, IssuePermission, CommentPermission
 
 
 class ProjectViewSet(viewsets.ModelViewSet):
@@ -19,11 +18,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
     """
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
-    permission_classes = [AllowAny]
-
-    def get_project(self):
-        current_project = self.kwargs["project_pk"]
-        return get_object_or_404(Project, id=current_project)
+    permission_classes = [IsAuthenticated, ProjectPermission]
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -51,7 +46,7 @@ class ContributorViewSet(viewsets.ModelViewSet):
     """
     serializer_class = ContributorSerializer
     queryset = Contributor.objects.all()
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated, ContributorPermission]
 
     def get_queryset(self):
         """ retrieve all contributors of a project """
@@ -79,10 +74,10 @@ class ContributorViewSet(viewsets.ModelViewSet):
 
     def destroy(self, request, *args, **kwargs):
         try:
-            get_object_or_404(Project, pk=self.kwargs['project'])
+            get_object_or_404(Project, pk=self.kwargs['project_pk'])
             contributor_to_delete = Contributor.objects.get(
-                project=self.kwargs['project'],
-                user=self.kwargs['user'])
+                project=self.kwargs['project_pk'],
+                user=self.kwargs['pk'])
 
             if contributor_to_delete.role == "Author":
                 return Response(
@@ -104,7 +99,7 @@ class IssueViewSet(viewsets.ModelViewSet):
     """
     queryset = Issue.objects.all()
     serializer_class = IssueSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IssuePermission]
 
     def get_project(self):
         lookup_field = self.kwargs['project_pk']
@@ -143,7 +138,7 @@ class CommentViewSet(viewsets.ModelViewSet):
     """
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, CommentPermission]
 
     def get_project(self):
         lookup_field = self.kwargs['project_pk']

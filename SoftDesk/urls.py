@@ -18,7 +18,6 @@ from django.urls import path, include
 from rest_framework.routers import SimpleRouter
 from rest_framework_nested.routers import NestedSimpleRouter
 
-from users.views import home
 from projects.views import ProjectViewSet, ContributorViewSet, CommentViewSet, IssueViewSet
 
 router = SimpleRouter()
@@ -35,13 +34,11 @@ issues_router.register(r'comments', CommentViewSet, basename='comments')
 
 
 urlpatterns = [
+    path('', include('users.urls')),
+    path('admin/', admin.site.urls),
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('', include(router.urls)),
     path('', include(projects_router.urls)),
     path('', include(issues_router.urls)),
     path('', include(users_router.urls)),
-
-    path('', home, name='home'),
-    path('', include('users.urls')),
-    path('', include('rest_framework.urls', namespace='rest_framework')),
-    path('admin/', admin.site.urls),
 ]

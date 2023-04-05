@@ -5,7 +5,7 @@ from django.utils import timezone
 
 TYPE = (("Back-End", "Back-End"), ("Front-End", "Front-End"), ("IOS", "IOS"), ("Android", "Android"))
 
-ROLE = (("Author", "Author"), ("Manager", "Manager"), ("Contributor", "Contributor"))
+ROLE = (("Author", "Author"), ("Contributor", "Contributor"))
 PERMISSION = (("All", "All"), ("Restricted", "Restricted"))
 
 TAG = (("Bug", "Bug"), ("Improvement", "Improvement"), ("Task", "Task"))
@@ -17,11 +17,12 @@ class Project(models.Model):
     title = models.CharField(max_length=50, blank=False, unique=True)
     description = models.CharField(max_length=500)
     type = models.CharField(max_length=10, choices=TYPE, default="Back-End")
-    author = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.RESTRICT,
+    author = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
                                related_name='project_author')
     created_at = models.DateTimeField(default=timezone.now, editable=False)
 
     class Meta:
+        constraints = [models.UniqueConstraint(fields=['author', 'title'], name='unique_author')]
         verbose_name = 'Project'
 
     def __str__(self):
@@ -31,7 +32,7 @@ class Project(models.Model):
 class Contributor(models.Model):
     user = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
                              related_name='user_contributor')
-    project = models.ForeignKey(to=Project, on_delete=models.RESTRICT,
+    project = models.ForeignKey(to=Project, on_delete=models.CASCADE,
                                 related_name='project_contributors')
     permission = models.CharField(max_length=12, choices=PERMISSION, default='Restricted')
     role = models.CharField(max_length=12, choices=ROLE, default='Contributor')
@@ -54,9 +55,9 @@ class Issue(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE,
                                 related_name='issue_related')
     status = models.CharField(max_length=12, choices=STATUS, default='ToDo')
-    author = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.RESTRICT,
+    author = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
                                related_name='issue_author')
-    assignee = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.RESTRICT,
+    assignee = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
                                  related_name='issue_assigned_to')
     # created_time = models.DateTimeField(default=timezone.now, editable=False)
     created_time = models.DateTimeField(auto_now_add=True, editable=False)

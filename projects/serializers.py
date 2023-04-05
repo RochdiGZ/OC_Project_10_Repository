@@ -26,11 +26,10 @@ class ContributorSerializer(ModelSerializer):
     class Meta(object):
         model = Contributor
         fields = "__all__"
-        # read_only_fields = ['project', 'permission', 'role']
+        # read_only_fields = ['project', 'permission']
         extra_kwargs = {
             'project': {'read_only': True},
             'permission': {'read_only': True},
-            'role': {'read_only': True},
             'created_time': {'default': timezone.now, 'format': '%d %B %Y %H:%M'},
             'last_updated': {'default': timezone.now, 'format': '%d %B %Y %H:%M'}
         }
