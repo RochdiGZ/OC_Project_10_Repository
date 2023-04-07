@@ -21,10 +21,11 @@ class ContributorPermission(BasePermission):
         if Project.objects.filter(projet=view.kwargs['project_pk']).exists():
             if request.method in SAFE_METHODS:
                 return True
+            is_author = Contributor.objects.filter(project=view.kwargs['project_pk'], user=request.user,
+                                                   role="Author", permission="All").exists()
             if request.method in ['POST', 'PUT', 'DELETE']:
                 self.message = "Only the author can execute requests to add, update or delete a project contributor."
-                return Contributor.objects.filter(project=view.kwargs['project_pk'], user=request.user,
-                                                  role="Author", permission="All").exists()
+                return is_author
         self.message = "This project does not exist"
         return False
 
@@ -33,8 +34,14 @@ class IssuePermission(BasePermission):
     message = "Only contributors are allowed to create or read project issues."
 
     def has_object_permission(self, request, view, obj):
-        if request.method in SAFE_METHODS or request.method == 'POST':
+        if request.method in SAFE_METHODS:
             return True
+        is_contributor = Contributor.objects.filter(project=view.kwargs['project_pk'], user=request.user,
+                                                    role="Contributor").exists()
+        is_author = Contributor.objects.filter(project=view.kwargs['project_pk'], user=request.user,
+                                               role="Author").exists()
+        if request.method == 'POST':
+            return is_author or is_contributor
         if request.method in ['PUT', 'DELETE']:
             self.message = "Only the author can execute requests to update and delete a project issue."
             return request.user == obj.author
@@ -44,8 +51,14 @@ class CommentPermission(BasePermission):
     message = "Only contributors are allowed to create or read issue comments."
 
     def has_object_permission(self, request, view, obj):
-        if request.method in SAFE_METHODS or request.method == 'POST':
+        if request.method in SAFE_METHODS:
             return True
+        is_contributor = Contributor.objects.filter(project=view.kwargs['project_pk'], user=request.user,
+                                                    role="Contributor").exists()
+        is_author = Contributor.objects.filter(project=view.kwargs['project_pk'], user=request.user,
+                                               role="Author").exists()
+        if request.method == 'POST':
+            return is_author or is_contributor
         if request.method in ['PUT', 'DELETE']:
             self.message = "Only the author can execute requests to update and delete an issue comment."
             return request.user == obj.author

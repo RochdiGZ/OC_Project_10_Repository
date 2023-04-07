@@ -34,9 +34,10 @@ issues_router.register(r'comments', CommentViewSet, basename='comments')
 
 
 urlpatterns = [
-    path('', include('users.urls')),
     path('admin/', admin.site.urls),
-    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    path('', include('users.urls')),
+    path('', include('rest_framework.urls', namespace='rest_framework')),
+
     path('', include(router.urls)),
     path('', include(projects_router.urls)),
     path('', include(issues_router.urls)),
