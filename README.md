@@ -22,6 +22,7 @@ python -m venv ENV
 ```bash
 ENV/Scripts/activate
 ```
+### ⚙️ Choisir un interpréteur Python depuis le nouvel environnement virtuel
 ### 💿 Installer tous les modules du projet Django
 ```bash
 python.exe -m pip install --upgrade pip
@@ -34,14 +35,6 @@ pip install -r requirements.txt
 flake8 --format=html --htmldir=flake8_report --max-line-length=119
 ```
 ### ⚙️ Créer les migrations de tous les modèles du projet
-### ⚙️ Créer un super utilisateur pour se connecter à partir de l'interface de l'administration Django
-```bash
-python manage.py createsuperuser
-``` 
-Dans l'étape suivante, il suffit de rester dans le terminal pour taper un nom d'utilisateur (email) et un mot de passe 
-avec confirmation du mot de passe. Par exemple, 
-Email: rochdi@gmail.com
-Password: secret@django
 ```bash
 python manage.py makemigrations
 ``` 
@@ -49,9 +42,19 @@ python manage.py makemigrations
 ```bash
 python manage.py migrate
 ``` 
+### ⚙️ Créer un super utilisateur pour se connecter à partir de l'interface de l'administration Django
+```bash
+python.exe manage.py createsuperuser
+``` 
+Dans l'étape suivante, il suffit de rester dans le terminal pour taper un nom d'utilisateur (email) et un mot de passe 
+avec confirmation du mot de passe. Par exemple, 
+- Email: rochdi@gmail.com
+- First_name : Rochdi
+- Last_name : GUEZGUEZ
+- Password: secret@django
 ### ⚙️ Lancer le serveur de développement
 ```bash
-python manage.py runserver
+python.exe manage.py runserver
 ``` 
 Une fois le serveur de développement lancé, vous pouvez voir, dans un navigateur web, la page ayant l'adresse 
 `http://127.0.0.1:8000`
